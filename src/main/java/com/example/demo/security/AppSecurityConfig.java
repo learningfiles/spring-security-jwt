@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -42,14 +44,16 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/**").hasRole(ApplicationUserRole.STUDENT.name())
+                // using http with role based
                 /*.antMatchers(HttpMethod.POST, "/management/**").hasRole(ApplicationUserRole.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/management/**").hasRole(ApplicationUserRole.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/management/**").hasRole(ApplicationUserRole.ADMIN.name())
                 .antMatchers(HttpMethod.GET, "/management/**").hasAnyRole(ApplicationUserRole.ADMIN.name(), ApplicationUserRole.ADMINTRAINEE.name())*/
-                .antMatchers(HttpMethod.POST, "/management/**").hasAuthority(ApplicationUserPermission.STUDENT_WRITE.name())
+                // using http with authority based
+                /*.antMatchers(HttpMethod.POST, "/management/**").hasAuthority(ApplicationUserPermission.STUDENT_WRITE.name())
                 .antMatchers(HttpMethod.PUT, "/management/**").hasAuthority(ApplicationUserPermission.STUDENT_WRITE.name())
                 .antMatchers(HttpMethod.DELETE, "/management/**").hasAuthority(ApplicationUserPermission.STUDENT_WRITE.name())
-                .antMatchers(HttpMethod.GET, "/management/**").hasAuthority(ApplicationUserPermission.STUDENT_READ.name())
+                .antMatchers(HttpMethod.GET, "/management/**").hasAuthority(ApplicationUserPermission.STUDENT_READ.name())*/
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
