@@ -1,0 +1,27 @@
+GET http://localhost:8080/management/api/v1/students
+Authorization: Basic tom tom
+
+###
+
+POST http://localhost:8080/management/api/v1/students
+Content-Type: application/json
+Authorization: Basic bar bar
+
+{
+  "name": "learner"
+}
+
+###
+
+DELETE http://localhost:8080/management/api/v1/students/1
+Authorization: Basic bar bar
+
+###
+
+PUT http://localhost:8080/management/api/v1/students/1
+Content-Type: application/json
+Authorization: Basic tom tom
+
+{
+  "name": "learner"
+}
