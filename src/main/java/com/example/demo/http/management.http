@@ -5,7 +5,8 @@ Authorization: Basic tom tom
 
 POST http://localhost:8080/management/api/v1/students
 Content-Type: application/json
-Authorization: Basic tom tom
+Authorization: Basic bar bar
+#X-XSRF-TOKEN: token
 
 {
   "name": "learner"
