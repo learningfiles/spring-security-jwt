@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,22 +22,29 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JwtTokenVerifier extends OncePerRequestFilter {
+    private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
+
+    public JwtTokenVerifier(JwtConfig jwtConfig, SecretKey secretKey) {
+        this.jwtConfig = jwtConfig;
+        this.secretKey = secretKey;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
         String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())) {
             filterChain.doFilter(request, response);
             return;
         }
         try {
-            String secret = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
-
             String token = authorizationHeader.substring(7);
 
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .setSigningKey(secretKey)
                     .build().parseClaimsJws(token);
 
             Claims body = claimsJws.getBody();

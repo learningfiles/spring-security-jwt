@@ -5,3 +5,18 @@ Content-Type: application/json
   "username": "bar",
   "password": "bar"
 }
+
+###
+
+GET http://localhost:8080/management/api/v1/students
+Authorization: Bearer token
+
+###
+POST http://localhost:8080/management/api/v1/students
+Content-Type: application/json
+Authorization: Bearer token
+#X-XSRF-TOKEN: token
+
+{
+  "name": "learner"
+}
